@@ -69,6 +69,17 @@
   .work .cap { margin-top: 14px; font-size: 13px; }
   .work .cap span { display: block; color: var(--muted); font-size: 12px; letter-spacing: .04em; }
 
+  /* Categories */
+  .cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 40px 32px; }
+  .cat { display: block; cursor: pointer; }
+  .cat .cover { aspect-ratio: 4 / 5; background: var(--placeholder); overflow: hidden; }
+  .cat .cover img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .3s; }
+  .cat:hover .cover img { opacity: .88; }
+  .cat .name { margin-top: 14px; font-size: 13px; letter-spacing: .18em; text-transform: uppercase; }
+  .cat .count { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .back { display: inline-block; margin: 24px 0 0; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+  .back:hover { color: var(--text); }
+
   /* Lightbox */
   .lightbox {
     position: fixed; inset: 0; background: rgba(255,255,255,.98);
@@ -141,8 +152,15 @@
 
   <!-- WORKS -->
   <section class="page" id="page-works">
-    <h1 data-i18n="nav_works">Works</h1>
-    <div class="grid" id="grid"></div>
+    <div id="catsView">
+      <h1 data-i18n="nav_works">Works</h1>
+      <div class="cats" id="cats"></div>
+    </div>
+    <div id="catView" style="display:none">
+      <a class="back" href="#/works" data-i18n="back">← All works</a>
+      <h1 id="catTitle"></h1>
+      <div class="grid" id="grid"></div>
+    </div>
   </section>
 
   <!-- BIOGRAPHY -->
@@ -198,14 +216,14 @@
    ============================================================ */
 
 const SITE = {
-  email: "candanoozturk@gmail.com",          // <- your e-mail
-  instagram: "candanoozturk",              // <- without the @
-  studio: "Bremen, Germany",                  // <- your city / studio
+  email: "candanoozturk@gmail.com",         // <- your e-mail
+  instagram: "candanoozturk",               // <- without the @
+  studio: "Sebaldsbrücker Bf 1",            // <- your city / studio
   heroImage: "",                            // e.g. "images/hero.jpg" (leave "" for a blank frame)
   portrait: "",                             // e.g. "images/candan.jpg"
   impressum: {                              // legally required in Germany
     name: "Candan Öztürk",
-    address: "Sebaldsbrücker bf 1 Bremen",
+    address: "Sebaldsbrücker Bf 1",
     email: "candanoozturk@gmail.com"
   }
 };
@@ -217,14 +235,23 @@ const SITE = {
    title: English / German title
    info:  year, technique, size (en / de)
 */
+const CATEGORIES = [
+  // id: short name without spaces (used in WORKS below)
+  // cover: optional cover image from /images (leave "" to use the first painting of the category)
+  { id: "recent",    cover: "", title: { en: "Recent Works", de: "Aktuelle Arbeiten" } },
+  { id: "2011-2015", cover: "", title: { en: "2011–2015",    de: "2011–2015" } },
+  { id: "past",      cover: "", title: { en: "Past Works",   de: "Frühere Arbeiten" } }
+];
+
+/* cat: the id of the category the painting belongs to: "recent", "2011-2015" or "past" */
 const WORKS = [
-  { img: "", ratio: "4/5", year: 2026,
+  { cat: "recent", img: "", ratio: "4/5", year: 2026,
     title: { en: "Untitled I",  de: "Ohne Titel I" },
     info:  { en: "2026 · Oil on canvas · 80 × 100 cm", de: "2026 · Öl auf Leinwand · 80 × 100 cm" } },
-  { img: "", ratio: "1/1", year: 2025,
+  { cat: "recent", img: "", ratio: "1/1", year: 2025,
     title: { en: "Untitled II", de: "Ohne Titel II" },
     info:  { en: "2025 · Oil on canvas · 100 × 100 cm", de: "2025 · Öl auf Leinwand · 100 × 100 cm" } },
-  { img: "", ratio: "5/4", year: 2025,
+  { cat: "2011-2015", img: "", ratio: "5/4", year: 2013,
     title: { en: "Untitled III", de: "Ohne Titel III" },
     info:  { en: "2025 · Acrylic on canvas · 120 × 96 cm", de: "2025 · Acryl auf Leinwand · 120 × 96 cm" } }
 ];
@@ -251,10 +278,12 @@ const CV = [
 const I18N = {
   en: { nav_home:"Home", nav_works:"Works", nav_bio:"Biography", nav_contact:"Contact",
         tagline:"Painter", view_works:"View works", close:"Close", studio:"Studio",
+        back:"← All works", works_n:"works",
         contact_intro:"For inquiries about works, exhibitions or commissions, please get in touch.",
         impressum:"Impressum", imp_contact:"Contact", imp_resp:"Responsible for content" },
   de: { nav_home:"Start", nav_works:"Arbeiten", nav_bio:"Biografie", nav_contact:"Kontakt",
         tagline:"Malerin", view_works:"Arbeiten ansehen", close:"Schließen", studio:"Atelier",
+        back:"← Alle Arbeiten", works_n:"Arbeiten",
         contact_intro:"Für Anfragen zu Arbeiten, Ausstellungen oder Auftragsarbeiten schreib mir gerne.",
         impressum:"Impressum", imp_contact:"Kontakt", imp_resp:"Verantwortlich für den Inhalt" }
 };
@@ -291,11 +320,31 @@ function renderStatic() {
     <p><b style="font-weight:400">${I18N[lang].imp_resp}</b><br>${i.name}<br>${i.address}</p>
     <p><b style="font-weight:400">${I18N[lang].imp_contact}</b><br>${i.email}</p>`;
 
-  renderWorks();
+  renderWorksView();
 }
 
-function renderWorks() {
-  $("#grid").innerHTML = WORKS.map((w, idx) => {
+let currentCat = null;
+
+function renderWorksView() {
+  const cat = CATEGORIES.find(c => c.id === currentCat);
+  $("#catsView").style.display = cat ? "none" : "block";
+  $("#catView").style.display = cat ? "block" : "none";
+
+  if (!cat) {
+    $("#cats").innerHTML = CATEGORIES.map(c => {
+      const items = WORKS.filter(w => w.cat === c.id);
+      const coverFile = c.cover || (items.find(w => w.img) || {}).img || "";
+      const cover = coverFile ? `<img src="images/${coverFile}" alt="${c.title[lang]}" loading="lazy">` : "";
+      return `<a class="cat" href="#/works/${c.id}">
+        <div class="cover">${cover}</div>
+        <div class="name">${c.title[lang]}</div>
+        <div class="count">${items.length} ${I18N[lang].works_n}</div></a>`;
+    }).join("");
+    return;
+  }
+
+  $("#catTitle").textContent = cat.title[lang];
+  $("#grid").innerHTML = WORKS.map((w, idx) => ({ w, idx })).filter(o => o.w.cat === cat.id).map(({ w, idx }) => {
     const media = w.img
       ? `<div class="frame"><img src="images/${w.img}" alt="${w.title[lang]}" loading="lazy"></div>`
       : `<div class="ph" style="aspect-ratio:${w.ratio || "4/5"}"></div>`;
@@ -317,8 +366,11 @@ $("#lightbox").addEventListener("click", () => $("#lightbox").classList.remove("
 document.addEventListener("keydown", e => { if (e.key === "Escape") $("#lightbox").classList.remove("open"); });
 
 function route() {
-  const name = (location.hash.replace(/^#\/?/, "") || "home");
+  const parts = location.hash.replace(/^#\/?/, "").split("/");
+  const name = parts[0] || "home";
+  currentCat = parts[1] || null;
   const page = ["home","works","biography","contact","impressum"].includes(name) ? name : "home";
+  renderWorksView();
   $$(".page").forEach(p => p.classList.toggle("active", p.id === "page-" + page));
   $$("nav a[data-route]").forEach(a => a.classList.toggle("active", a.dataset.route === page));
   window.scrollTo(0, 0);
