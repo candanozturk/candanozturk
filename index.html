@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Candan Öztürk – Painter</title>
+<meta name="description" content="Portfolio of Candan Öztürk, painter. / Portfolio der Malerin Candan Öztürk.">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #1a1a1a;
+    --muted: #8a8a8a;
+    --line: #e8e8e8;
+    --placeholder: #f1f1ef;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* Header */
+  header {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px;
+    padding: 32px 40px;
+  }
+  .logo { font-size: 15px; letter-spacing: .22em; text-transform: uppercase; font-weight: 400; }
+  nav { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; }
+  nav a, .lang button {
+    font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--muted); transition: color .2s;
+    background: none; border: 0; cursor: pointer; font-family: inherit; font-weight: 300;
+  }
+  nav a:hover, nav a.active, .lang button:hover, .lang button.active { color: var(--text); }
+  .lang { display: flex; gap: 10px; padding-left: 24px; border-left: 1px solid var(--line); }
+
+  main { padding: 0 40px 80px; max-width: 1400px; margin: 0 auto; }
+  .page { display: none; animation: fade .5s ease; }
+  .page.active { display: block; }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+  h1 { font-weight: 300; font-size: 13px; letter-spacing: .22em; text-transform: uppercase; margin: 24px 0 48px; }
+
+  /* Home */
+  .hero { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 40px 0 0; }
+  .hero-img {
+    width: min(560px, 100%); aspect-ratio: 4 / 5; background: var(--placeholder);
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .hero-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hero h2 { font-weight: 300; font-size: 28px; letter-spacing: .08em; margin-top: 40px; }
+  .hero p { color: var(--muted); font-size: 13px; letter-spacing: .2em; text-transform: uppercase; margin-top: 8px; }
+  .hero .more { display: inline-block; margin-top: 32px; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; border-bottom: 1px solid var(--text); padding-bottom: 3px; }
+
+  /* Works */
+  .grid { columns: 3 320px; column-gap: 32px; }
+  .work { break-inside: avoid; margin-bottom: 48px; cursor: pointer; }
+  .work .frame { background: var(--placeholder); overflow: hidden; }
+  .work img { width: 100%; display: block; transition: opacity .3s; }
+  .work:hover img { opacity: .88; }
+  .work .ph { width: 100%; background: var(--placeholder); }
+  .work .cap { margin-top: 14px; font-size: 13px; }
+  .work .cap span { display: block; color: var(--muted); font-size: 12px; letter-spacing: .04em; }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed; inset: 0; background: rgba(255,255,255,.98);
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    padding: 40px; z-index: 10; cursor: zoom-out;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img, .lightbox .ph { max-width: 90vw; max-height: 74vh; display: block; }
+  .lightbox .ph { background: var(--placeholder); width: 60vh; height: 60vh; }
+  .lightbox .cap { margin-top: 24px; text-align: center; font-size: 14px; }
+  .lightbox .cap span { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .lightbox .close { position: absolute; top: 28px; right: 40px; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+
+  /* Text pages */
+  .text { max-width: 640px; }
+  .text p { margin-bottom: 1.4em; font-size: 16px; }
+  .bio-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  .portrait { background: var(--placeholder); aspect-ratio: 4 / 5; overflow: hidden; }
+  .portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cv { margin-top: 40px; border-top: 1px solid var(--line); }
+  .cv div { display: flex; gap: 24px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .cv b { font-weight: 400; min-width: 64px; color: var(--muted); }
+
+  .contact-list p { font-size: 16px; margin-bottom: .6em; }
+  .contact-list .label { color: var(--muted); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; margin-top: 2em; }
+  .contact-list a { border-bottom: 1px solid var(--line); }
+  .contact-list a:hover { border-color: var(--text); }
+
+  footer { text-align: center; color: var(--muted); font-size: 11px; letter-spacing: .16em; padding: 40px 20px; border-top: 1px solid var(--line); }
+  footer a { margin: 0 10px; }
+  footer a:hover { color: var(--text); }
+
+  @media (max-width: 760px) {
+    header { padding: 24px 20px; flex-direction: column; align-items: flex-start; }
+    nav { gap: 20px; }
+    .lang { padding-left: 0; border-left: 0; }
+    main { padding: 0 20px 60px; }
+    .bio-wrap { grid-template-columns: 1fr; gap: 32px; }
+    .grid { columns: 1; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="#/" class="logo">Candan Öztürk</a>
+  <nav>
+    <a href="#/" data-route="home" data-i18n="nav_home">Home</a>
+    <a href="#/works" data-route="works" data-i18n="nav_works">Works</a>
+    <a href="#/biography" data-route="biography" data-i18n="nav_bio">Biography</a>
+    <a href="#/contact" data-route="contact" data-i18n="nav_contact">Contact</a>
+    <div class="lang">
+      <button data-lang="en">EN</button>
+      <button data-lang="de">DE</button>
+    </div>
+  </nav>
+</header>
+
+<main>
+
+  <!-- HOME -->
+  <section class="page" id="page-home">
+    <div class="hero">
+      <div class="hero-img" id="heroImg"></div>
+      <h2>Candan Öztürk</h2>
+      <p data-i18n="tagline">Painter</p>
+      <a class="more" href="#/works" data-i18n="view_works">View works</a>
+    </div>
+  </section>
+
+  <!-- WORKS -->
+  <section class="page" id="page-works">
+    <h1 data-i18n="nav_works">Works</h1>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <!-- BIOGRAPHY -->
+  <section class="page" id="page-biography">
+    <h1 data-i18n="nav_bio">Biography</h1>
+    <div class="bio-wrap">
+      <div class="text">
+        <div data-i18n-html="bio_text"></div>
+        <div class="cv" id="cv"></div>
+      </div>
+      <div class="portrait" id="portrait"></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="page" id="page-contact">
+    <h1 data-i18n="nav_contact">Contact</h1>
+    <div class="text contact-list">
+      <p data-i18n="contact_intro">For inquiries about works, exhibitions or commissions, please get in touch.</p>
+      <p class="label">E-mail</p>
+      <p><a id="mail" href="#"></a></p>
+      <p class="label">Instagram</p>
+      <p><a id="insta" href="#" target="_blank" rel="noopener"></a></p>
+      <p class="label" data-i18n="studio">Studio</p>
+      <p id="studio"></p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  © <span id="year"></span> CANDAN ÖZTÜRK
+  <a href="#/impressum" data-i18n="impressum">Impressum</a>
+</footer>
+
+<!-- IMPRESSUM (required in Germany) -->
+<main style="padding-top:0">
+  <section class="page" id="page-impressum">
+    <h1>Impressum</h1>
+    <div class="text" id="impressumText"></div>
+  </section>
+</main>
+
+<div class="lightbox" id="lightbox">
+  <span class="close" data-i18n="close">Close</span>
+  <div id="lbMedia"></div>
+  <div class="cap" id="lbCap"></div>
+</div>
+
+<script>
+/* ============================================================
+   EDIT ONLY THIS SECTION
+   ============================================================ */
+
+const SITE = {
+  email: "your-email@example.com",          // <- your e-mail
+  instagram: "your_instagram",              // <- without the @
+  studio: "City, Germany",                  // <- your city / studio
+  heroImage: "",                            // e.g. "images/hero.jpg" (leave "" for a blank frame)
+  portrait: "",                             // e.g. "images/candan.jpg"
+  impressum: {                              // legally required in Germany
+    name: "Candan Öztürk",
+    address: "Street 1, 12345 City",
+    email: "your-email@example.com"
+  }
+};
+
+/* ---- YOUR WORKS ----
+   To add a painting: put the photo in the "images" folder, then add one line
+   at the TOP of this list (newest first).
+   img:  file name inside /images
+   title: English / German title
+   info:  year, technique, size (en / de)
+*/
+const WORKS = [
+  { img: "", ratio: "4/5", year: 2026,
+    title: { en: "Untitled I",  de: "Ohne Titel I" },
+    info:  { en: "2026 · Oil on canvas · 80 × 100 cm", de: "2026 · Öl auf Leinwand · 80 × 100 cm" } },
+  { img: "", ratio: "1/1", year: 2025,
+    title: { en: "Untitled II", de: "Ohne Titel II" },
+    info:  { en: "2025 · Oil on canvas · 100 × 100 cm", de: "2025 · Öl auf Leinwand · 100 × 100 cm" } },
+  { img: "", ratio: "5/4", year: 2025,
+    title: { en: "Untitled III", de: "Ohne Titel III" },
+    info:  { en: "2025 · Acrylic on canvas · 120 × 96 cm", de: "2025 · Acryl auf Leinwand · 120 × 96 cm" } }
+];
+
+/* ---- BIOGRAPHY TEXT ---- */
+const BIO = {
+  en: `<p>Candan Öztürk is a painter based in Germany. Her work explores [your themes here].</p>
+       <p>Replace this text with your own biography: where you were born, where you studied, what drives your work.</p>`,
+  de: `<p>Candan Öztürk ist Malerin und lebt in Deutschland. Ihre Arbeiten beschäftigen sich mit [deine Themen hier].</p>
+       <p>Ersetze diesen Text durch deine eigene Biografie: wo du geboren bist, wo du studiert hast, was deine Arbeit antreibt.</p>`
+};
+
+/* ---- CV / EXHIBITIONS (optional, delete lines you don't need) ---- */
+const CV = [
+  { year: "2026", en: "Solo exhibition, Gallery Name, City", de: "Einzelausstellung, Galerie Name, Stadt" },
+  { year: "2025", en: "Group exhibition, Space Name, City",  de: "Gruppenausstellung, Ort Name, Stadt" },
+  { year: "2020", en: "Studied painting, Academy Name",      de: "Studium der Malerei, Akademie Name" }
+];
+
+/* ============================================================
+   SITE CODE (no need to change anything below)
+   ============================================================ */
+
+const I18N = {
+  en: { nav_home:"Home", nav_works:"Works", nav_bio:"Biography", nav_contact:"Contact",
+        tagline:"Painter", view_works:"View works", close:"Close", studio:"Studio",
+        contact_intro:"For inquiries about works, exhibitions or commissions, please get in touch.",
+        impressum:"Impressum", imp_contact:"Contact", imp_resp:"Responsible for content" },
+  de: { nav_home:"Start", nav_works:"Arbeiten", nav_bio:"Biografie", nav_contact:"Kontakt",
+        tagline:"Malerin", view_works:"Arbeiten ansehen", close:"Schließen", studio:"Atelier",
+        contact_intro:"Für Anfragen zu Arbeiten, Ausstellungen oder Auftragsarbeiten schreib mir gerne.",
+        impressum:"Impressum", imp_contact:"Kontakt", imp_resp:"Verantwortlich für den Inhalt" }
+};
+
+let lang = "en";
+try {
+  const saved = localStorage.getItem("lang");
+  if (saved === "en" || saved === "de") lang = saved;
+  else if ((navigator.language || "").toLowerCase().startsWith("de")) lang = "de";
+} catch (e) {}
+
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+
+function renderStatic() {
+  document.documentElement.lang = lang;
+  $$("[data-i18n]").forEach(el => el.textContent = I18N[lang][el.dataset.i18n]);
+  $$("[data-i18n-html]").forEach(el => el.innerHTML = BIO[lang]);
+  $$(".lang button").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+
+  $("#cv").innerHTML = CV.map(r => `<div><b>${r.year}</b><span>${r[lang]}</span></div>`).join("");
+  $("#mail").textContent = SITE.email; $("#mail").href = "mailto:" + SITE.email;
+  $("#insta").textContent = "@" + SITE.instagram; $("#insta").href = "https://instagram.com/" + SITE.instagram;
+  $("#studio").textContent = SITE.studio;
+  $("#year").textContent = new Date().getFullYear();
+
+  $("#heroImg").innerHTML = SITE.heroImage
+    ? `<img src="${SITE.heroImage}" alt="Candan Öztürk">`
+    : (WORKS[0] && WORKS[0].img ? `<img src="images/${WORKS[0].img}" alt="${WORKS[0].title[lang]}">` : "");
+  $("#portrait").innerHTML = SITE.portrait ? `<img src="${SITE.portrait}" alt="Candan Öztürk">` : "";
+
+  const i = SITE.impressum;
+  $("#impressumText").innerHTML = `
+    <p><b style="font-weight:400">${I18N[lang].imp_resp}</b><br>${i.name}<br>${i.address}</p>
+    <p><b style="font-weight:400">${I18N[lang].imp_contact}</b><br>${i.email}</p>`;
+
+  renderWorks();
+}
+
+function renderWorks() {
+  $("#grid").innerHTML = WORKS.map((w, idx) => {
+    const media = w.img
+      ? `<div class="frame"><img src="images/${w.img}" alt="${w.title[lang]}" loading="lazy"></div>`
+      : `<div class="ph" style="aspect-ratio:${w.ratio || "4/5"}"></div>`;
+    return `<div class="work" data-idx="${idx}">${media}
+      <div class="cap">${w.title[lang]}<span>${w.info[lang]}</span></div></div>`;
+  }).join("");
+  $$(".work").forEach(el => el.addEventListener("click", () => openLightbox(+el.dataset.idx)));
+}
+
+function openLightbox(idx) {
+  const w = WORKS[idx];
+  $("#lbMedia").innerHTML = w.img
+    ? `<img src="images/${w.img}" alt="${w.title[lang]}">`
+    : `<div class="ph"></div>`;
+  $("#lbCap").innerHTML = `${w.title[lang]}<span>${w.info[lang]}</span>`;
+  $("#lightbox").classList.add("open");
+}
+$("#lightbox").addEventListener("click", () => $("#lightbox").classList.remove("open"));
+document.addEventListener("keydown", e => { if (e.key === "Escape") $("#lightbox").classList.remove("open"); });
+
+function route() {
+  const name = (location.hash.replace(/^#\/?/, "") || "home");
+  const page = ["home","works","biography","contact","impressum"].includes(name) ? name : "home";
+  $$(".page").forEach(p => p.classList.toggle("active", p.id === "page-" + page));
+  $$("nav a[data-route]").forEach(a => a.classList.toggle("active", a.dataset.route === page));
+  window.scrollTo(0, 0);
+}
+
+$$(".lang button").forEach(b => b.addEventListener("click", () => {
+  lang = b.dataset.lang;
+  try { localStorage.setItem("lang", lang); } catch (e) {}
+  renderStatic();
+}));
+
+window.addEventListener("hashchange", route);
+renderStatic();
+route();
+</script>
+</body>
+</html>
