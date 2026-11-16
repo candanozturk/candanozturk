@@ -99,9 +99,10 @@
   .bio-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
   .portrait { background: var(--placeholder); aspect-ratio: 4 / 5; overflow: hidden; }
   .portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .cv { margin-top: 40px; border-top: 1px solid var(--line); }
-  .cv div { display: flex; gap: 24px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
-  .cv b { font-weight: 400; min-width: 64px; color: var(--muted); }
+  .cv { margin-top: 24px; }
+  .cv h3 { font-weight: 300; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; margin: 48px 0 8px; }
+  .cv div { display: flex; gap: 24px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; line-height: 1.55; }
+  .cv b { font-weight: 400; min-width: 84px; color: var(--muted); }
 
   .contact-list p { font-size: 16px; margin-bottom: .6em; }
   .contact-list .label { color: var(--muted); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; margin-top: 2em; }
@@ -258,17 +259,63 @@ const WORKS = [
 
 /* ---- BIOGRAPHY TEXT ---- */
 const BIO = {
-  en: `<p>Candan Öztürk is a painter based in Germany. Her work explores [your themes here].</p>
-       <p>Replace this text with your own biography: where you were born, where you studied, what drives your work.</p>`,
-  de: `<p>Candan Öztürk ist Malerin und lebt in Deutschland. Ihre Arbeiten beschäftigen sich mit [deine Themen hier].</p>
-       <p>Ersetze diesen Text durch deine eigene Biografie: wo du geboren bist, wo du studiert hast, was deine Arbeit antreibt.</p>`
+  en: `<p>Born in Ankara, Turkey, in 1988, Candan Öztürk is a painter who lives and works in Bremen, Germany. After a BA in Painting at Dokuz Eylül University in Izmir (2010), studies continued at the University of the Arts Bremen (HfK), where Öztürk completed an MA in Fine Arts / Painting in the class of Prof. Katrin von Maltzahn (2018).</p>
+       <p>Works have been shown in Istanbul, Izmir, Dubai and Bremen, among other places, and are part of the Soho House Collection, the Taviloğlu Collection and private collections. In 2026, Öztürk was nominated for the 49th Bremer Förderpreis für Bildende Kunst and received a recognition in the Kunst am Bau competition for the Customs Office Soltau (BIMA).</p>`,
+  de: `<p>Candan Öztürk wurde 1988 in Ankara, Türkei, geboren und lebt und arbeitet als Malerin in Bremen. Nach einem BA-Studium der Malerei an der Dokuz Eylül Universität Izmir (2010) folgte das Studium an der Hochschule für Künste Bremen, wo Öztürk 2018 in der Klasse von Prof. Katrin von Maltzahn den MA in Freie Kunst / Malerei abschloss.</p>
+       <p>Arbeiten wurden unter anderem in Istanbul, Izmir, Dubai und Bremen gezeigt und befinden sich in der Soho House Collection, der Taviloğlu Collection und in privaten Sammlungen. 2026 wurde Öztürk für den 49. Bremer Förderpreis für Bildende Kunst nominiert und erhielt eine Anerkennung im Kunst-am-Bau-Wettbewerb für das Zollamt Soltau (BIMA).</p>`
 };
 
 /* ---- CV / EXHIBITIONS (optional, delete lines you don't need) ---- */
+/* Each section has a title and rows. "text" is either one text (same in EN and DE)
+   or { en: "...", de: "..." }. To add an exhibition, add one line at the TOP of its section. */
 const CV = [
-  { year: "2026", en: "Solo exhibition, Gallery Name, City", de: "Einzelausstellung, Galerie Name, Stadt" },
-  { year: "2025", en: "Group exhibition, Space Name, City",  de: "Gruppenausstellung, Ort Name, Stadt" },
-  { year: "2020", en: "Studied painting, Academy Name",      de: "Studium der Malerei, Akademie Name" }
+  { title: { en: "Education", de: "Ausbildung" }, rows: [
+    { year: "2017–2018", text: {
+        en: "University of the Arts Bremen (HfK), Fine Arts / Painting, class of Prof. Katrin von Maltzahn, Meisterschüler / MA",
+        de: "Hochschule für Künste Bremen, Freie Kunst / Malerei, Klasse Prof. Katrin von Maltzahn, Meisterschüler / MA" } },
+    { year: "2016–2017", text: {
+        en: "University of the Arts Bremen (HfK), Fine Arts / Painting, guest student",
+        de: "Hochschule für Künste Bremen, Freie Kunst / Malerei, Gaststudium" } },
+    { year: "2006–2010", text: {
+        en: "Dokuz Eylül University Izmir, Faculty of Fine Arts, Painting (BA)",
+        de: "Dokuz Eylül Universität Izmir, Fakultät für Schöne Künste, Malerei (BA)" } }
+  ]},
+  { title: { en: "Awards and Honours", de: "Preise und Auszeichnungen" }, rows: [
+    { year: "2026", text: {
+        en: "Recognition, Kunst am Bau competition, Customs Office Soltau (BIMA)",
+        de: "Anerkennung, Kunst am Bau Wettbewerb, Zollamt Soltau (BIMA)" } },
+    { year: "2026", text: {
+        en: "Nominated for the 49th Bremer Förderpreis für Bildende Kunst",
+        de: "Nominiert für den 49. Bremer Förderpreis für Bildende Kunst" } }
+  ]},
+  { title: { en: "Solo Exhibition", de: "Einzelausstellung" }, rows: [
+    { year: "2014", text: "Power and Oblivion, Daire Gallery, Istanbul" }
+  ]},
+  { title: { en: "Selected Group Exhibitions", de: "Gruppenausstellungen (Auswahl)" }, rows: [
+    { year: "2026", text: { en: "49th Bremer Förderpreis für Bildende Kunst, Städtische Galerie Bremen",
+                            de: "49. Bremer Förderpreis für Bildende Kunst, Städtische Galerie Bremen" } },
+    { year: "2018", text: "MESH, Weserburg Museum für moderne Kunst, Bremen" },
+    { year: "2018", text: "Hochschultage, HfK Bremen" },
+    { year: "2017", text: ".ZIP, HfK Gallery, Bremen" },
+    { year: "2017", text: "Hochschultage, HfK Bremen" },
+    { year: "2012–2016", text: "Contemporary Istanbul Art Fair, Istanbul" },
+    { year: "2013", text: "Modern and Contemporary Arab, Iranian and Turkish Art Part II, Christie's Dubai" },
+    { year: "2013", text: "The Loss, Daire Gallery, Istanbul" },
+    { year: "2013", text: "First Layer, Daire Gallery, Istanbul" },
+    { year: "2012", text: "Beyond Experience, Pera Museum, Istanbul" },
+    { year: "2012", text: "Borders-Orbits 11, Siemens Sanat, Istanbul" },
+    { year: "2011", text: "Uncanny Discoveries, K2 Contemporary Art Center, Izmir" },
+    { year: "2010", text: "Look In Side, Soyer Culture and Arts Factory, Izmir" },
+    { year: "2010", text: "Turgut Pura Foundation, Izmir" },
+    { year: "2010", text: "Open City: Canakkale, State Fine Arts Gallery, Çanakkale" },
+    { year: "2009", text: "Armağan Project for Nesin Foundation, Istanbul" },
+    { year: "2009", text: "Ghost Concrete, Sad Tree, Stubborn Hill, Institut Français, Izmir" }
+  ]},
+  { title: { en: "Collections", de: "Sammlungen" }, rows: [
+    { year: "", text: {
+        en: "Soho House Collection, Taviloğlu Collection and private collections",
+        de: "Soho House Collection, Taviloğlu Collection und private Sammlungen" } }
+  ]}
 ];
 
 /* ============================================================
@@ -304,7 +351,9 @@ function renderStatic() {
   $$("[data-i18n-html]").forEach(el => el.innerHTML = BIO[lang]);
   $$(".lang button").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
 
-  $("#cv").innerHTML = CV.map(r => `<div><b>${r.year}</b><span>${r[lang]}</span></div>`).join("");
+  $("#cv").innerHTML = CV.map(sec => `<h3>${sec.title[lang]}</h3>` +
+    sec.rows.map(r => `<div><b>${r.year}</b><span>${typeof r.text === "string" ? r.text : r.text[lang]}</span></div>`).join("")
+  ).join("");
   $("#mail").textContent = SITE.email; $("#mail").href = "mailto:" + SITE.email;
   $("#insta").textContent = "@" + SITE.instagram; $("#insta").href = "https://instagram.com/" + SITE.instagram;
   $("#studio").textContent = SITE.studio;
